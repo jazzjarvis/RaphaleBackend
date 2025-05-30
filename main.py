@@ -2,6 +2,9 @@ from flask import Flask, request, jsonify
 from transformers import pipeline
 import torch
 
+from app import create_app
+
+
 app = Flask(__name__)
 
 # Load emotion detection model
@@ -11,19 +14,16 @@ emotion_classifier = pipeline(
     return_all_scores=True
 )
 
-@app.route('/detect-emotion', methods=['POST'])
-def detect_emotion():
+@app.route('/detect-emotion', methods=['POST'])       
+def detect_emotion(): 
     data = request.get_json()
     text = data.get('text', '')
     
-    # Get emotion predictions
     predictions = emotion_classifier(text)
     
-    # Get the emotion with highest score
     top_emotion = max(predictions[0], key=lambda x: x['score'])
     emotion = top_emotion['label']
     
-    # Generate response based on emotion (this is a simple example)
     responses = {
         'joy': f"I sense you're happy about this! That's wonderful!",
         'anger': "I notice some frustration in your words. Would you like to talk about it?",
@@ -40,6 +40,10 @@ def detect_emotion():
         'emotion': emotion,
         'response': response_text
     })
+
+
+app = create_app()
+
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5000)
