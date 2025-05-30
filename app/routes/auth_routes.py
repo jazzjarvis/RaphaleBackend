@@ -1,7 +1,11 @@
 from flask import Blueprint, request, jsonify
-from RaphaleBackend.main import db, bcrypt
 from app.models import User
+
 from app.utils.jwt_handler import encode_auth_token
+from app.extensions import db,bcrypt
+
+
+
 
 auth_bp = Blueprint('auth', __name__)
 
@@ -31,7 +35,7 @@ def signup():
 @auth_bp.route('/login', methods=['POST'])
 def login():
     data = request.json
-    email_or_username = data.get('username')  # could be username or email
+    email_or_username = data.get('username')  
     password = data.get('password')
 
     user = User.query.filter((User.username == email_or_username) | (User.email == email_or_username)).first()

@@ -1,10 +1,7 @@
 from flask import Flask
-from flask_sqlalchemy import SQLAlchemy
-from flask_bcrypt import Bcrypt
+from app.extensions import db,bcrypt
 from config import Config
 
-db = SQLAlchemy()
-bcrypt = Bcrypt()
 
 def create_app():
     app = Flask(__name__)
@@ -14,6 +11,7 @@ def create_app():
     bcrypt.init_app(app)
 
     from app.routes.auth_routes import auth_bp
+    
     app.register_blueprint(auth_bp, url_prefix='/auth')
 
     with app.app_context():
